@@ -32,11 +32,11 @@ export default function AdminLogin() {
         router.push('/admin/dashboard');
       }
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred during login';
       toast({
         variant: "destructive",
         title: "Error",
-        description: errorMessage,
+        description: errorMessage
       });
     } finally {
       setLoading(false);

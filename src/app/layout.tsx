@@ -25,38 +25,32 @@ export default function RootLayout({
         <main className="flex-grow">
           {children}
         </main>
-        <footer className="bg-gray-100 mt-auto">
-          <div className="container mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <footer className="bg-gray-800 text-white py-8">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <h3 className="font-bold text-lg mb-4">RaffleHub</h3>
-                <p className="text-gray-600">Your chance to win amazing prizes</p>
+                <h3 className="text-xl font-bold mb-4">Power Picks</h3>
+                <p className="text-gray-400">Your trusted platform for exciting raffles and competitions.</p>
               </div>
               <div>
-                <h4 className="font-bold mb-4">Quick Links</h4>
+                <h3 className="text-xl font-bold mb-4">Quick Links</h3>
                 <ul className="space-y-2">
-                  <li><Link href="/" className="text-gray-600 hover:text-purple-600">Home</Link></li>
-                  <li><Link href="/raffles" className="text-gray-600 hover:text-purple-600">Raffles</Link></li>
-                  <li><Link href="/winners" className="text-gray-600 hover:text-purple-600">Winners</Link></li>
+                  <li><Link href="/" className="text-gray-400 hover:text-white transition-colors">Home</Link></li>
+                  <li><Link href="/raffles/" className="text-gray-400 hover:text-white transition-colors">Raffles</Link></li>
+                  <li><Link href="/winners" className="text-gray-400 hover:text-white transition-colors">Winners</Link></li>
+                  <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors">About</Link></li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold mb-4">Legal</h4>
+                <h3 className="text-xl font-bold mb-4">Legal</h3>
                 <ul className="space-y-2">
-                  <li><Link href="/terms" className="text-gray-600 hover:text-purple-600">Terms & Conditions</Link></li>
-                  <li><Link href="/privacy" className="text-gray-600 hover:text-purple-600">Privacy Policy</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold mb-4">Contact</h4>
-                <ul className="space-y-2">
-                  <li className="text-gray-600">Email: support@rafflehub.com</li>
-                  <li className="text-gray-600">Phone: (555) 123-4567</li>
+                  <li><Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/terms" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link></li>
                 </ul>
               </div>
             </div>
-            <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-600">
-              © 2024 RaffleHub. All rights reserved.
+            <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+              <p>&copy; {new Date().getFullYear()} Power Picks. All rights reserved.</p>
             </div>
           </div>
         </footer>

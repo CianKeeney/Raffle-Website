@@ -6,6 +6,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/components/ui/use-toast';
+import Image from 'next/image';
+import { useToast } from '@/components/ui/use-toast';
 
 interface RaffleCardProps {
   raffle: {
@@ -23,29 +25,29 @@ interface RaffleCardProps {
 export default function RaffleCard({ raffle }: RaffleCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleEnterRaffle = async () => {
     try {
+      setIsLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
-      console.log('RaffleCard - Session check:', session ? 'Found session' : 'No session');
       
-      if (!session) {
-        const currentUrl = `/raffles/${raffle.id}`;
-        const returnUrl = encodeURIComponent(currentUrl);
-        console.log('RaffleCard - Not logged in, redirecting to login with return URL:', returnUrl);
-        window.location.href = `/login?returnUrl=${returnUrl}`;
-        return;
+      if (session) {
+        console.log('RaffleCard - Logged in, proceeding to raffle:', session.user.id);
+        window.location.href = `/raffles/${raffle.id}`;
+      } else {
+        console.log('RaffleCard - Not logged in, redirecting to login');
+        window.location.href = `/login?returnUrl=/raffles/${raffle.id}`;
       }
-
-      console.log('RaffleCard - Logged in, proceeding to raffle:', raffle.id);
-      window.location.href = `/raffles/${raffle.id}`;
     } catch (error) {
-      console.error('Error handling raffle entry:', error);
+      console.error('Error entering raffle:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to enter raffle. Please try again.",
+        description: "Failed to enter raffle. Please try again."
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,12 +55,14 @@ export default function RaffleCard({ raffle }: RaffleCardProps) {
   const endDate = new Date(raffle.end_date).toLocaleDateString();
 
   return (
-    <Card className="overflow-hidden">
-      <div className="relative h-48">
-        <img
-          src={raffle.image_url}
+    <Card className="overflow-hidden bg-gray-800 border-gray-700">
+      <div className="relative h-48 w-full">
+        <Image
+          src={raffle.image_url || '/placeholder.jpg'}
           alt={raffle.title}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
       <CardHeader>

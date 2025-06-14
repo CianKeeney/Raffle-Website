@@ -30,30 +30,22 @@ interface Raffle {
   id: string;
   title: string;
   description: string;
-  prize_description: string;
-  ticket_price: number;
-  total_tickets: number;
-  available_tickets: number;
-  start_date: string;
-  end_date: string;
+  endDate: string;
   status: string;
-  created_at: string;
+  entries: number;
+  revenue: number;
 }
 
 const availableColumns = [
   { id: 'title', label: 'Title' },
   { id: 'description', label: 'Description' },
-  { id: 'prize_description', label: 'Prize Description' },
-  { id: 'ticket_price', label: 'Ticket Price' },
-  { id: 'total_tickets', label: 'Total Tickets' },
-  { id: 'available_tickets', label: 'Available Tickets' },
-  { id: 'start_date', label: 'Start Date' },
-  { id: 'end_date', label: 'End Date' },
+  { id: 'endDate', label: 'End Date' },
   { id: 'status', label: 'Status' },
-  { id: 'created_at', label: 'Created At' }
+  { id: 'entries', label: 'Entries' },
+  { id: 'revenue', label: 'Revenue' }
 ];
 
-export default function ViewRaffles() {
+export default function RafflesPage() {
   const router = useRouter();
   const [raffles, setRaffles] = useState<Raffle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -146,7 +138,7 @@ export default function ViewRaffles() {
     const filteredData = filteredRaffles.map(raffle => {
       const row: Record<string, any> = {};
       selectedColumns.forEach(column => {
-        if (column === 'start_date' || column === 'end_date' || column === 'created_at') {
+        if (column === 'endDate') {
           row[column] = formatDate(raffle[column as keyof Raffle] as string);
         } else {
           row[column] = raffle[column as keyof Raffle];
@@ -180,8 +172,12 @@ export default function ViewRaffles() {
     document.body.removeChild(link);
   };
 
-  const handleStatusChange = (raffleId: string, newStatus: string) => {
-    // ... existing code ...
+  const handleStatusChange = async (raffleId: string, newStatus: string) => {
+    try {
+      // ... existing code ...
+    } catch (error) {
+      console.error('Error updating raffle status:', error);
+    }
   };
 
   return (
@@ -274,37 +270,28 @@ export default function ViewRaffles() {
                     </TableHead>
                     <TableHead 
                       className="cursor-pointer"
-                      onClick={() => handleSort('ticket_price')}
-                    >
-                      <div className="flex items-center gap-2">
-                        Price
-                        <ArrowUpDown className="h-4 w-4" />
-                      </div>
-                    </TableHead>
-                    <TableHead 
-                      className="cursor-pointer"
-                      onClick={() => handleSort('available_tickets')}
-                    >
-                      <div className="flex items-center gap-2">
-                        Available
-                        <ArrowUpDown className="h-4 w-4" />
-                      </div>
-                    </TableHead>
-                    <TableHead 
-                      className="cursor-pointer"
-                      onClick={() => handleSort('start_date')}
-                    >
-                      <div className="flex items-center gap-2">
-                        Start Date
-                        <ArrowUpDown className="h-4 w-4" />
-                      </div>
-                    </TableHead>
-                    <TableHead 
-                      className="cursor-pointer"
-                      onClick={() => handleSort('end_date')}
+                      onClick={() => handleSort('endDate')}
                     >
                       <div className="flex items-center gap-2">
                         End Date
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer"
+                      onClick={() => handleSort('entries')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Entries
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer"
+                      onClick={() => handleSort('revenue')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Revenue
                         <ArrowUpDown className="h-4 w-4" />
                       </div>
                     </TableHead>
@@ -333,12 +320,9 @@ export default function ViewRaffles() {
                           </div>
                         </TableCell>
                         <TableCell>{getStatusBadge(raffle.status)}</TableCell>
-                        <TableCell>${raffle.ticket_price.toFixed(2)}</TableCell>
-                        <TableCell>
-                          {raffle.available_tickets} / {raffle.total_tickets}
-                        </TableCell>
-                        <TableCell>{formatDate(raffle.start_date)}</TableCell>
-                        <TableCell>{formatDate(raffle.end_date)}</TableCell>
+                        <TableCell>{formatDate(raffle.endDate)}</TableCell>
+                        <TableCell>{raffle.entries}</TableCell>
+                        <TableCell>${raffle.revenue.toFixed(2)}</TableCell>
                       </TableRow>
                     ))
                   )}

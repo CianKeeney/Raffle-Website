@@ -25,7 +25,7 @@ export default function PrivacyPolicy() {
               Welcome to the Power Picks privacy policy.
             </p>
             <p className="text-gray-700">
-              Power Picks respects your privacy and is committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.
+              We&apos;re committed to protecting your privacy and ensuring that your personal data is handled in accordance with applicable data protection laws. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.
             </p>
           </section>
 
@@ -118,7 +118,7 @@ export default function PrivacyPolicy() {
 
           <section className="mb-8">
             <h3 className="text-xl font-bold text-blue-500 mb-4">4.2. Legal Basis for Using Your Data</h3>
-            <p className="text-gray-700 mb-4">We use your data only when legally permitted. This includes:</p>
+            <p className="text-gray-700 mb-4">We&apos;ll only use your personal data when the law allows us to. Most commonly, we&apos;ll use your personal data in the following circumstances:</p>
             <ul className="list-disc pl-6 text-gray-700 mb-4">
               <li>Performing our contract with you (e.g., managing your entries or awarding prizes)</li>
               <li>Complying with legal obligations</li>
@@ -207,7 +207,10 @@ export default function PrivacyPolicy() {
               5. Data Security and Retention
             </h2>
             <p className="text-gray-700">
-              We take appropriate security measures to protect your data. We retain personal data only as long as necessary for the purposes described in this policy or to meet legal requirements.
+              We&apos;ve put in place appropriate security measures to prevent your personal data from being accidentally lost, used, or accessed in an unauthorized way, altered, or disclosed.
+            </p>
+            <p className="text-gray-700">
+              We retain personal data only as long as necessary for the purposes described in this policy or to meet legal requirements.
             </p>
           </section>
 
@@ -274,7 +277,7 @@ export default function PrivacyPolicy() {
               9. Change of Purpose
             </h2>
             <p className="text-gray-700">
-              The Promoter will only use your personal data for the purposes for which the Promoter collected it, unless the Promoter reasonably considers that it is needed to use it for another reason and that reason is compatible with the original purpose. If you wish to get an explanation as to how the processing for the new purpose is compatible with the original purpose, please contact the Promoter. If the Promoter needs to use your personal data for an unrelated purpose, the Promoter will notify you and will explain the legal basis which allows the Promoter to do so.
+              We&apos;ll only use your personal data for the purposes for which we collected it, unless we reasonably consider that we need to use it for another reason and that reason is compatible with the original purpose. If you wish to get an explanation as to how the processing for the new purpose is compatible with the original purpose, please contact the Promoter. If the Promoter needs to use your personal data for an unrelated purpose, the Promoter will notify you and will explain the legal basis which allows the Promoter to do so.
             </p>
           </section>
 
@@ -283,7 +286,7 @@ export default function PrivacyPolicy() {
               10. How long the Promoter keeps your personal data
             </h2>
             <p className="text-gray-700">
-              The Promoter will only keep your personal data for as long as necessary to fulfil the purposes the Promoter collected it for, including for the purposes of satisfying any legal, accounting, or reporting requirements. At the end of that retention period, your data will either be deleted or anonymised (so that it can no longer be associated with you) and used for research or statistical purposes. To determine the appropriate retention period for personal data, the Promoter considers the amount, nature, and sensitivity of the personal data, the potential risk of harm from unauthorised use or disclosure of your personal data, the purposes for which the Promoter processes your personal data and whether the Promoter can achieve those purposes through other means, and the applicable legal requirements.
+              We&apos;ll only retain your personal data for as long as necessary to fulfill the purposes we collected it for, including for the purposes of satisfying any legal, accounting, or reporting requirements. At the end of that retention period, your data will either be deleted or anonymised (so that it can no longer be associated with you) and used for research or statistical purposes. To determine the appropriate retention period for personal data, the Promoter considers the amount, nature, and sensitivity of the personal data, the potential risk of harm from unauthorised use or disclosure of your personal data, the purposes for which the Promoter processes your personal data and whether the Promoter can achieve those purposes through other means, and the applicable legal requirements.
             </p>
           </section>
 
@@ -329,6 +332,15 @@ export default function PrivacyPolicy() {
             </p>
             <p className="text-gray-700">
               Ooosch maintains strict physical, electronic, and administrative safeguards to protect your personal data from unauthorised or inappropriate access. The data the Promoter collects is stored in secure operating environments not accessible by the public.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-blue-500 mb-4 font-orbitron border-b border-blue-500 pb-2">
+              14. Data Breach
+            </h2>
+            <p className="text-gray-700 mb-4">
+              We&apos;ve put in place procedures to deal with any suspected personal data breach and will notify you and any applicable regulator of a breach where we are legally required to do so.
             </p>
           </section>
 
