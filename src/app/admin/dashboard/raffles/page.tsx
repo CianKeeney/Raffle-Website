@@ -180,6 +180,10 @@ export default function ViewRaffles() {
     document.body.removeChild(link);
   };
 
+  const handleStatusChange = (raffleId: string, newStatus: string) => {
+    // ... existing code ...
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">

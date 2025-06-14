@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as HotToaster } from 'react-hot-toast';
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,16 +35,16 @@ export default function RootLayout({
               <div>
                 <h4 className="font-bold mb-4">Quick Links</h4>
                 <ul className="space-y-2">
-                  <li><a href="/" className="text-gray-600 hover:text-purple-600">Home</a></li>
-                  <li><a href="/raffles" className="text-gray-600 hover:text-purple-600">Raffles</a></li>
-                  <li><a href="/winners" className="text-gray-600 hover:text-purple-600">Winners</a></li>
+                  <li><Link href="/" className="text-gray-600 hover:text-purple-600">Home</Link></li>
+                  <li><Link href="/raffles" className="text-gray-600 hover:text-purple-600">Raffles</Link></li>
+                  <li><Link href="/winners" className="text-gray-600 hover:text-purple-600">Winners</Link></li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-bold mb-4">Legal</h4>
                 <ul className="space-y-2">
-                  <li><a href="/terms" className="text-gray-600 hover:text-purple-600">Terms & Conditions</a></li>
-                  <li><a href="/privacy" className="text-gray-600 hover:text-purple-600">Privacy Policy</a></li>
+                  <li><Link href="/terms" className="text-gray-600 hover:text-purple-600">Terms & Conditions</Link></li>
+                  <li><Link href="/privacy" className="text-gray-600 hover:text-purple-600">Privacy Policy</Link></li>
                 </ul>
               </div>
               <div>

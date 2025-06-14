@@ -24,6 +24,15 @@ interface RaffleStats {
   totalRevenue: number;
 }
 
+interface Raffle {
+  id: string;
+  title: string;
+  description: string;
+  endDate: string;
+  status: string;
+  // Add other properties as needed
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
@@ -33,6 +42,7 @@ export default function AdminDashboard() {
     totalRevenue: 0
   });
   const [loading, setLoading] = useState(true);
+  const [raffles, setRaffles] = useState<Raffle[]>([]);
 
   useEffect(() => {
     const checkUser = async () => {

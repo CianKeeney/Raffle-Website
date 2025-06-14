@@ -25,7 +25,7 @@ export default function PrivacyPolicy() {
               Welcome to the Power Picks privacy policy.
             </p>
             <p className="text-gray-700">
-              Power Picks respects your privacy and is committed to protecting your personal data. This privacy policy explains how we handle your personal information when you visit our website (regardless of location), and it informs you of your privacy rights and how the law protects you.
+              Power Picks respects your privacy and is committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.
             </p>
           </section>
 
