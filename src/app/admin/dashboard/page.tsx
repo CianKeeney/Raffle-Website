@@ -17,36 +17,28 @@ import {
   AlertCircle,
   DollarSign
 } from 'lucide-react';
+import { Raffle } from '@/types/raffle';
+import { raffleService } from '@/services/raffleService';
+import { useToast } from '@/components/ui/use-toast';
 
-interface RaffleStats {
-  ongoing: number;
-  inactive: number;
-  totalRevenue: number;
+interface DashboardStats {
+  totalRaffles: number;
+  activeRaffles: number;
+  completedRaffles: number;
+  totalEntries: number;
 }
 
-interface Raffle {
-  id: string;
-  title: string;
-  description: string;
-  endDate: string;
-  status: string;
-}
-
-export default function AdminDashboard() {
+export default function DashboardPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [user, setUser] = useState<any>(null);
-  const [raffleStats, setRaffleStats] = useState<RaffleStats>({
-    ongoing: 0,
-    inactive: 0,
-    totalRevenue: 0
-  });
   const [loading, setLoading] = useState(true);
   const [raffles, setRaffles] = useState<Raffle[]>([]);
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<DashboardStats>({
     totalRaffles: 0,
     activeRaffles: 0,
+    completedRaffles: 0,
     totalEntries: 0,
-    totalRevenue: 0
   });
 
   useEffect(() => {
@@ -56,50 +48,36 @@ export default function AdminDashboard() {
         router.push('/admin/login');
       } else {
         setUser(user);
-        fetchRaffleStats();
+        fetchData();
       }
     };
     checkUser();
   }, [router]);
 
-  const fetchRaffleStats = async () => {
+  const fetchData = async () => {
     try {
-      const { data: ongoingRaffles, error: ongoingError } = await supabase
-        .from('raffles')
-        .select('*')
-        .eq('status', 'active')
-        .gte('end_date', new Date().toISOString());
-
-      const { data: inactiveRaffles, error: inactiveError } = await supabase
-        .from('raffles')
-        .select('*')
-        .or('status.eq.inactive,end_date.lt.' + new Date().toISOString());
-
-      if (ongoingError || inactiveError) throw ongoingError || inactiveError;
-
-      // Calculate total revenue based on tickets sold (total_tickets - available_tickets)
-      const totalRevenue = [...(ongoingRaffles || []), ...(inactiveRaffles || [])].reduce((sum, raffle) => {
-        const ticketsSold = raffle.total_tickets - raffle.available_tickets;
-        const raffleRevenue = raffle.ticket_price * ticketsSold;
-        console.log(`Raffle ${raffle.title}:`, {
-          ticketPrice: raffle.ticket_price,
-          totalTickets: raffle.total_tickets,
-          availableTickets: raffle.available_tickets,
-          ticketsSold,
-          raffleRevenue
-        });
-        return sum + raffleRevenue;
-      }, 0);
-
-      console.log('Total Revenue:', totalRevenue);
-
-      setRaffleStats({
-        ongoing: ongoingRaffles?.length || 0,
-        inactive: inactiveRaffles?.length || 0,
-        totalRevenue
+      const fetchedRaffles = await raffleService.getActiveRaffles();
+      setRaffles(fetchedRaffles);
+      
+      // Calculate stats
+      const totalRaffles = fetchedRaffles.length;
+      const activeRaffles = fetchedRaffles.filter(r => r.status === 'active').length;
+      const completedRaffles = fetchedRaffles.filter(r => r.status === 'completed').length;
+      const totalEntries = fetchedRaffles.reduce((sum, r) => sum + (r.entries?.length || 0), 0);
+      
+      setStats({
+        totalRaffles,
+        activeRaffles,
+        completedRaffles,
+        totalEntries,
       });
     } catch (error) {
-      console.error('Error fetching raffle stats:', error);
+      console.error('Error fetching dashboard data:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load dashboard data',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -137,8 +115,8 @@ export default function AdminDashboard() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Ongoing Raffles</p>
-                <p className="text-2xl font-bold text-blue-600">{raffleStats.ongoing}</p>
+                <p className="text-sm font-medium text-gray-500">Total Raffles</p>
+                <p className="text-2xl font-bold text-blue-600">{stats.totalRaffles}</p>
               </div>
               <Clock className="h-8 w-8 text-blue-500" />
             </div>
@@ -146,8 +124,8 @@ export default function AdminDashboard() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Inactive Raffles</p>
-                <p className="text-2xl font-bold text-green-600">{raffleStats.inactive}</p>
+                <p className="text-sm font-medium text-gray-500">Active Raffles</p>
+                <p className="text-2xl font-bold text-green-600">{stats.activeRaffles}</p>
               </div>
               <AlertCircle className="h-8 w-8 text-green-500" />
             </div>
@@ -155,8 +133,17 @@ export default function AdminDashboard() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Revenue</p>
-                <p className="text-2xl font-bold text-purple-600">${raffleStats.totalRevenue.toFixed(2)}</p>
+                <p className="text-sm font-medium text-gray-500">Completed Raffles</p>
+                <p className="text-2xl font-bold text-purple-600">{stats.completedRaffles}</p>
+              </div>
+              <Clock className="h-8 w-8 text-purple-500" />
+            </div>
+          </Card>
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Total Entries</p>
+                <p className="text-2xl font-bold text-purple-600">{stats.totalEntries}</p>
               </div>
               <DollarSign className="h-8 w-8 text-purple-500" />
             </div>

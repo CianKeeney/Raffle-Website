@@ -25,6 +25,9 @@ import {
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Raffle } from '@/types/raffle';
+import { raffleService } from '@/services/raffleService';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Raffle {
   id: string;
@@ -47,6 +50,7 @@ const availableColumns = [
 
 export default function RafflesPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [raffles, setRaffles] = useState<Raffle[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -60,15 +64,15 @@ export default function RafflesPage() {
 
   const fetchRaffles = async () => {
     try {
-      const { data, error } = await supabase
-        .from('raffles')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setRaffles(data || []);
+      const fetchedRaffles = await raffleService.getActiveRaffles();
+      setRaffles(fetchedRaffles);
     } catch (error) {
       console.error('Error fetching raffles:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load raffles',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -174,11 +178,25 @@ export default function RafflesPage() {
 
   const handleStatusChange = async (raffleId: string, newStatus: string) => {
     try {
-      // ... existing code ...
+      await raffleService.updateRaffle(raffleId, { status: newStatus });
+      toast({
+        title: 'Success',
+        description: 'Raffle status updated successfully',
+      });
+      fetchRaffles();
     } catch (error) {
       console.error('Error updating raffle status:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update raffle status',
+        variant: 'destructive',
+      });
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
