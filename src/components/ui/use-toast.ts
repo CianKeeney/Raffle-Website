@@ -22,15 +22,15 @@ const actionTypes = {
   UPDATE_TOAST: "UPDATE_TOAST",
   DISMISS_TOAST: "DISMISS_TOAST",
   REMOVE_TOAST: "REMOVE_TOAST",
-} as const;
+} as const
 
-type ActionType = typeof actionTypes[keyof typeof actionTypes];
+type ActionType = typeof actionTypes[keyof typeof actionTypes]
 
 type Action = {
-  type: ActionType;
-  toast?: ToasterToast;
-  toastId?: string;
-};
+  type: ActionType
+  toast?: ToasterToast
+  toastId?: string
+}
 
 interface State {
   toasts: ToasterToast[]
@@ -75,6 +75,10 @@ export const reducer = (state: State, action: Action): State => {
 
       if (toastId) {
         addToRemoveQueue(toastId)
+      } else {
+        state.toasts.forEach((toast) => {
+          addToRemoveQueue(toast.id)
+        })
       }
 
       return {
@@ -89,7 +93,6 @@ export const reducer = (state: State, action: Action): State => {
         ),
       }
     }
-
     case "REMOVE_TOAST":
       if (action.toastId === undefined) {
         return {

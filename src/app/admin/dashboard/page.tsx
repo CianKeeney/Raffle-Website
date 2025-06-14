@@ -24,8 +24,8 @@ import { useToast } from '@/components/ui/use-toast';
 interface DashboardStats {
   totalRaffles: number;
   activeRaffles: number;
-  completedRaffles: number;
   totalEntries: number;
+  totalRevenue: number;
 }
 
 export default function DashboardPage() {
@@ -37,8 +37,8 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
     totalRaffles: 0,
     activeRaffles: 0,
-    completedRaffles: 0,
     totalEntries: 0,
+    totalRevenue: 0,
   });
 
   useEffect(() => {
@@ -56,26 +56,20 @@ export default function DashboardPage() {
 
   const fetchData = async () => {
     try {
-      const fetchedRaffles = await raffleService.getActiveRaffles();
-      setRaffles(fetchedRaffles);
-      
-      // Calculate stats
-      const totalRaffles = fetchedRaffles.length;
-      const activeRaffles = fetchedRaffles.filter(r => r.status === 'active').length;
-      const completedRaffles = fetchedRaffles.filter(r => r.status === 'completed').length;
-      const totalEntries = fetchedRaffles.reduce((sum, r) => sum + (r.entries?.length || 0), 0);
-      
+      const activeRaffles = await raffleService.getActiveRaffles();
+      const totalEntries = activeRaffles.reduce((sum, raffle) => sum + (raffle.entries?.length || 0), 0);
+      const totalRevenue = activeRaffles.reduce((sum, raffle) => sum + (raffle.price * (raffle.entries?.length || 0)), 0);
+
       setStats({
-        totalRaffles,
-        activeRaffles,
-        completedRaffles,
+        totalRaffles: activeRaffles.length,
+        activeRaffles: activeRaffles.length,
         totalEntries,
+        totalRevenue,
       });
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
       toast({
         title: 'Error',
-        description: 'Failed to load dashboard data',
+        description: 'Failed to fetch dashboard data',
         variant: 'destructive',
       });
     } finally {
@@ -90,6 +84,10 @@ export default function DashboardPage() {
 
   if (!user) {
     return null;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -133,17 +131,17 @@ export default function DashboardPage() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Completed Raffles</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.completedRaffles}</p>
+                <p className="text-sm font-medium text-gray-500">Total Entries</p>
+                <p className="text-2xl font-bold text-purple-600">{stats.totalEntries}</p>
               </div>
-              <Clock className="h-8 w-8 text-purple-500" />
+              <DollarSign className="h-8 w-8 text-purple-500" />
             </div>
           </Card>
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Entries</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.totalEntries}</p>
+                <p className="text-sm font-medium text-gray-500">Total Revenue</p>
+                <p className="text-2xl font-bold text-purple-600">€{stats.totalRevenue.toFixed(2)}</p>
               </div>
               <DollarSign className="h-8 w-8 text-purple-500" />
             </div>

@@ -52,31 +52,30 @@ export default function RafflesPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [raffles, setRaffles] = useState<Raffle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<keyof Raffle>('created_at');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [selectedColumns, setSelectedColumns] = useState<string[]>(availableColumns.map(col => col.id));
 
-  useEffect(() => {
-    fetchRaffles();
-  }, []);
-
   const fetchRaffles = async () => {
     try {
-      const fetchedRaffles = await raffleService.getActiveRaffles();
-      setRaffles(fetchedRaffles);
+      const activeRaffles = await raffleService.getActiveRaffles();
+      setRaffles(activeRaffles);
     } catch (error) {
-      console.error('Error fetching raffles:', error);
       toast({
         title: 'Error',
-        description: 'Failed to load raffles',
+        description: 'Failed to fetch raffles',
         variant: 'destructive',
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchRaffles();
+  }, []);
 
   const handleSort = (field: keyof Raffle) => {
     if (sortField === field) {
@@ -176,16 +175,15 @@ export default function RafflesPage() {
     document.body.removeChild(link);
   };
 
-  const handleStatusChange = async (raffleId: string, newStatus: string) => {
+  const handleStatusChange = async (raffleId: string, newStatus: 'active' | 'completed' | 'cancelled') => {
     try {
-      await raffleService.updateRaffle(raffleId, { status: newStatus });
+      await raffleService.updateRaffleStatus(raffleId, newStatus);
+      await fetchRaffles();
       toast({
         title: 'Success',
         description: 'Raffle status updated successfully',
       });
-      fetchRaffles();
     } catch (error) {
-      console.error('Error updating raffle status:', error);
       toast({
         title: 'Error',
         description: 'Failed to update raffle status',
@@ -194,7 +192,7 @@ export default function RafflesPage() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -316,7 +314,7 @@ export default function RafflesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading ? (
+                  {isLoading ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-8">
                         Loading...
