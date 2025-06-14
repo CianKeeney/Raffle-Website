@@ -8,11 +8,19 @@ const RETRY_DELAY = 1000; // 1 second
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+const checkSupabaseClient = () => {
+  if (!supabase) {
+    throw new Error('Supabase client is not initialized. Please check your environment variables.');
+  }
+  return supabase as NonNullable<typeof supabase>;
+};
+
 const retryOperation = async <T>(
   operation: () => Promise<PostgrestResponse<T>>,
   retries = MAX_RETRIES
 ): Promise<PostgrestResponse<T>> => {
   try {
+    const client = checkSupabaseClient();
     return await operation();
   } catch (error) {
     console.error('Operation failed:', error);
@@ -30,6 +38,7 @@ const retrySingleOperation = async <T>(
   retries = MAX_RETRIES
 ): Promise<PostgrestSingleResponse<T>> => {
   try {
+    const client = checkSupabaseClient();
     return await operation();
   } catch (error) {
     console.error('Operation failed:', error);
@@ -47,9 +56,10 @@ export const raffleService = {
   async getActiveRaffles(): Promise<Raffle[]> {
     try {
       console.log('Fetching active raffles...');
+      const client = checkSupabaseClient();
       const { data, error } = await retryOperation<Raffle[]>(() =>
         Promise.resolve(
-          supabase
+          client
             .from(RAFFLES_COLLECTION)
             .select('*')
             .eq('status', 'active')
@@ -77,9 +87,10 @@ export const raffleService = {
   async getRaffleById(id: string): Promise<Raffle | null> {
     try {
       console.log('Fetching raffle by ID:', id);
+      const client = checkSupabaseClient();
       const { data, error } = await retrySingleOperation<Raffle>(() =>
         Promise.resolve(
-          supabase
+          client
             .from(RAFFLES_COLLECTION)
             .select('*')
             .eq('id', id)
@@ -107,10 +118,11 @@ export const raffleService = {
   async createRaffle(raffle: Omit<Raffle, 'id' | 'created_at' | 'updated_at'>): Promise<Raffle | null> {
     try {
       console.log('Creating new raffle...');
+      const client = checkSupabaseClient();
       const now = new Date().toISOString();
       const { data, error } = await retrySingleOperation<Raffle>(() =>
         Promise.resolve(
-          supabase
+          client
             .from(RAFFLES_COLLECTION)
             .insert([{ ...raffle, created_at: now, updated_at: now }])
             .select()
@@ -138,9 +150,10 @@ export const raffleService = {
   async updateRaffle(id: string, updates: Partial<Raffle>): Promise<boolean> {
     try {
       console.log('Updating raffle:', id);
+      const client = checkSupabaseClient();
       const { error } = await retrySingleOperation<null>(() =>
         Promise.resolve(
-          supabase
+          client
             .from(RAFFLES_COLLECTION)
             .update({ ...updates, updated_at: new Date().toISOString() })
             .eq('id', id)
